@@ -1,95 +1,96 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from 'react';
+import { Box, Button, Container, FormControl, Input, InputLabel, IconButton, InputAdornment } from "@mui/material";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Header } from "./components/header/header";
+import { Footer } from "./components/footer/footer";
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const [email, setEmail] = useState<string>('');
+  const [senha, setSenha] = useState<string>('');
+  const [dadosUsuario, setDadosUsuario] = useState<Object>({});
+  const [exibeSenha, setExibeSenha] = useState<boolean>(false);
+  const router = useRouter();
+
+  const handleClickShowPassword = () => setExibeSenha(!exibeSenha);
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}auth/login`, {
+        email: email,
+        senha: senha
+      });
+      const dataUser = response.data;
+      setDadosUsuario(dataUser);
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Erro ao realizar login:', error);
+    }
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <>
+      <Header />
+      <Container
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Box
+          component="form"
+          onSubmit={handleLogin}
+          display="flex"
+          flexDirection="column"
+          width="350px"
+          gap={2}
+        >
+          <FormControl variant="standard">
+            <InputLabel htmlFor="email-input">Email</InputLabel>
+            <Input
+              id="email-input"
+              aria-describedby="email-helper-text"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
             />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+          </FormControl>
+          <FormControl variant="standard">
+            <InputLabel htmlFor="password-input">Senha</InputLabel>
+            <Input
+              id="password-input"
+              aria-describedby="password-helper-text"
+              type={exibeSenha ? 'text' : 'password'}
+              value={senha}
+              onChange={(event) => setSenha(event.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {exibeSenha ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+          <Button variant="contained" type="submit" style={{ backgroundColor:"#4CAF50" }}>
+            Login
+          </Button>
+        </Box>
+      </Container>
+      <Footer />
+    </>
   );
 }

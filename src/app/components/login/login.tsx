@@ -4,11 +4,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-
-interface ResponseUsuario {
-  token: string;
-  username: string;
-}
+import { ResponseUsuario } from '@/interfaces/Usuario';
 
 export const Login = () => {
   const [email, setEmail] = useState<string>('');

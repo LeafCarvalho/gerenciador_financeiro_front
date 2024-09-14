@@ -1,5 +1,7 @@
-import BuscaInvestimentos from '@/services/investimentos/buscaInvestimentos';
 import React, { useEffect, useState } from 'react'
+import { ModalCreateInfos } from '../../modal/modal';
+import { Box, List, ListItem, Typography } from '@mui/material';
+import {BuscaInvestimentos} from '@/services/investimentos/investimentosServices';
 
 export const Investimentos = () => {
     const [investimentos, setInvestimentos] = useState<any[]>([]);
@@ -9,7 +11,7 @@ export const Investimentos = () => {
             const dataInvestimentos = await BuscaInvestimentos();
             setInvestimentos(dataInvestimentos);
         } catch (error) {
-            console.error('Erro ao carregar entradas:', error);
+            console.error('Erro ao carregar investimentos:', error);
         }
     };
 
@@ -18,20 +20,25 @@ export const Investimentos = () => {
     }, []);
 
   return (
-    <div>
-        <h2>Investimentos:</h2>
-        <ul>
+    <>
+        <Box display="flex" justifyContent="end">
+            <ModalCreateInfos titulo={"investimentos titulo"} conteudo={"investimentos conteudo"}/>
+        </Box>
+        <Box>
+        <Typography variant="h4">Investimentos:</Typography>
+        <List>
             {investimentos.map((investimento, index) => (
-                <li key={index}>
-                    <div>
-                        <p>{investimento.nomeInvestimento}</p>
-                        <p>{investimento.tipoInvestimento} </p>
-                        <p>{investimento.tipoRecorrencia}</p>
-                    </div>
-                </li>
+            <ListItem key={index}>
+                <Box>
+                <Typography variant="body1">{investimento.nomeinvestimento}</Typography>
+                <Typography variant="body2">{investimento.tipoInvestimento}</Typography>
+                <Typography variant="body2">{investimento.tipoRecorrencia}</Typography>
+                </Box>
+            </ListItem>
             ))}
-        </ul>
-    </div>
+        </List>
+        </Box>
+    </>
   )
 }
 

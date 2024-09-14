@@ -37,7 +37,9 @@ export const Login = () => {
         senha: senha
       });
       const dataUser = response.data;
+      console.log(dataUser)
       localStorage.setItem('token', dataUser.token);
+      localStorage.setItem('nome', dataUser.name);
       
       if (lembrarMe) {
         localStorage.setItem('email', email);

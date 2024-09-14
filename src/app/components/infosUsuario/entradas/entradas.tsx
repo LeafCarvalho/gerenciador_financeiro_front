@@ -1,6 +1,7 @@
-
-import { buscaEntradas } from '@/services/entradas/buscaEntradas';
 import { useEffect, useState } from 'react'
+import { ModalCreateInfos } from '../../modal/modal';
+import { Box, List, ListItem, Typography } from '@mui/material';
+import { buscaEntradas } from '@/services/entradas/entradasServices';
 
 export const Entradas = () => {
     const [entradas, setEntradas] = useState<any[]>([]);
@@ -19,19 +20,24 @@ export const Entradas = () => {
     }, []);
 
   return (
-    <div>
-        <h2>Entradas:</h2>
-        <ul>
+    <>
+        <Box display="flex" justifyContent="end">
+            <ModalCreateInfos titulo={"entrada titulo"} conteudo={"entrada corpo"}/>
+        </Box>
+        <Box>
+        <Typography variant="h4">Entradas:</Typography>
+        <List>
             {entradas.map((entrada, index) => (
-                <li key={index}>
-                    <div>
-                        <p>{entrada.nomeEntrada}</p>
-                        <p>{entrada.tipoEntrada} </p>
-                        <p>{entrada.tipoRecorrencia}</p>
-                    </div>
-                </li>
+            <ListItem key={index}>
+                <Box>
+                <Typography variant="body1">{entrada.nomeEntrada}</Typography>
+                <Typography variant="body2">{entrada.tipoEntrada}</Typography>
+                <Typography variant="body2">{entrada.tipoRecorrencia}</Typography>
+                </Box>
+            </ListItem>
             ))}
-        </ul>
-    </div>
+        </List>
+        </Box>
+    </>
   )
 }

@@ -1,5 +1,7 @@
-import BuscaSaidas from '@/services/saidas/buscaSaidas';
 import React, { useEffect, useState } from 'react'
+import { ModalCreateInfos } from '../../modal/modal';
+import { Box, List, ListItem, Typography } from '@mui/material';
+import {BuscaSaidas} from '@/services/saidas/saidasServices';
 
 const Saidas = () => {
     const [saidas, setSaidas] = useState<any[]>([]);
@@ -18,20 +20,25 @@ const Saidas = () => {
     }, []);
 
   return (
-    <div>
-        <h2>Saídas:</h2>
-        <ul>
+    <>
+        <Box display="flex" justifyContent="end">
+            <ModalCreateInfos titulo={"saidas titulo"} conteudo={"saidas conteudo"}/>
+        </Box>
+        <Box>
+        <Typography variant="h4">Saídas:</Typography>
+        <List>
             {saidas.map((saida, index) => (
-                <li key={index}>
-                    <div>
-                        <p>{saida.nomeSaida}</p>
-                        <p>{saida.tipoSaida} </p>
-                        <p>{saida.tipoRecorrencia}</p>
-                    </div>
-                </li>
+            <ListItem key={index}>
+                <Box>
+                <Typography variant="body1">{saida.nomesaida}</Typography>
+                <Typography variant="body2">{saida.tipoSaida}</Typography>
+                <Typography variant="body2">{saida.tipoRecorrencia}</Typography>
+                </Box>
+            </ListItem>
             ))}
-        </ul>
-    </div>
+        </List>
+        </Box>
+    </>
   )
 }
 

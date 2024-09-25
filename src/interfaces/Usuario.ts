@@ -1,4 +1,7 @@
+import { Entradas, Investimentos, Saidas } from "./Transações";
+
 export interface ResponseUsuario {
+  id: string;
   token: string;
   name: string;
 }

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { ModalCreateInfos } from '../../modal/modal';
+import React, { useEffect, useState } from 'react';
+import { ModalCreateInfos } from '../../modal/ModalEntrada';
 import { Box, List, ListItem, Typography } from '@mui/material';
-import {BuscaInvestimentos} from '@/services/investimentos/investimentosServices';
+import { BuscaInvestimentos } from '@/services/investimentos/investimentosServices';
 
-export const Investimentos = () => {
+const Investimentos = () => {
     const [investimentos, setInvestimentos] = useState<any[]>([]);
 
     const carregarInvestimentos = async () => {
@@ -19,27 +19,23 @@ export const Investimentos = () => {
         carregarInvestimentos();
     }, []);
 
-  return (
-    <>
-        <Box display="flex" justifyContent="end">
-            <ModalCreateInfos titulo={"investimentos titulo"} conteudo={"investimentos conteudo"}/>
-        </Box>
-        <Box>
-        <Typography variant="h4">Investimentos:</Typography>
-        <List>
-            {investimentos.map((investimento, index) => (
-            <ListItem key={index}>
-                <Box>
-                <Typography variant="body1">{investimento.nomeinvestimento}</Typography>
-                <Typography variant="body2">{investimento.tipoInvestimento}</Typography>
-                <Typography variant="body2">{investimento.tipoRecorrencia}</Typography>
-                </Box>
-            </ListItem>
-            ))}
-        </List>
-        </Box>
-    </>
-  )
-}
+    return (
+        <>
+            <Box>
+                <List>
+                    {investimentos.map((investimento, index) => (
+                        <ListItem key={index}>
+                            <Box>
+                                <Typography variant="body1">{investimento.nomeInvestimento}</Typography>
+                                <Typography variant="body2">{investimento.tipoInvestimento}</Typography>
+                                <Typography variant="body2">{investimento.tipoRecorrencia}</Typography>
+                            </Box>
+                        </ListItem>
+                    ))}
+                </List>
+            </Box>
+        </>
+    );
+};
 
-export default Investimentos
+export default Investimentos;

@@ -15,6 +15,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
+import { criaInvestimento } from '@/services/investimentos/investimentosServices';
 
 const getErrorMessage = (error: any): string | undefined => {
   if (!error) return undefined;
@@ -48,40 +49,16 @@ export const ModalInvestimento: React.FC = () => {
 
   const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm();
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    const token = localStorage.getItem('token');
-    const baseURL = process.env.NEXT_PUBLIC_API_URL;
-
-    const formData = new FormData();
-    Object.keys(data).forEach((key) => formData.append(key, data[key]));
-
-    if (file) {
-      formData.append('reciboInvestimento', file);
+  const onSubmit: SubmitHandler<any> = async (data) => {
+    try {
+      await criaInvestimento(data, file);
+      console.log('Investimento criado com sucesso');
+      handleClose();
+      reset();
+      window.location.reload();
+    } catch (error) {
+      console.error('Erro ao criar investimento:', error);
     }
-
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
-
-    fetch(`${baseURL}investimentos`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log('Investimento criado com sucesso');
-          handleClose();
-          reset();
-        } else {
-          console.log('Erro na resposta:', response.status, response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error('Erro ao fazer requisição:', error);
-      });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

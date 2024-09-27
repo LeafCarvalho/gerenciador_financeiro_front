@@ -15,6 +15,7 @@ import {
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
 import CloseIcon from '@mui/icons-material/Close';
+import { criaEntrada } from '@/services/entradas/entradasServices';
 
 const getErrorMessage = (error: any): string | undefined => {
   if (!error) return undefined;
@@ -48,40 +49,15 @@ export const ModalEntrada: React.FC = () => {
 
   const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm();
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    const token = localStorage.getItem('token');
-    const baseURL = process.env.NEXT_PUBLIC_API_URL;
-
-    const formData = new FormData();
-    Object.keys(data).forEach((key) => formData.append(key, data[key]));
-
-    if (file) {
-      formData.append('reciboEntrada', file);
+  const onSubmit: SubmitHandler<any> = async (data) => {
+    try {
+      await criaEntrada(data, file);
+      console.log('Entrada criada com sucesso');
+      handleClose();
+      reset();
+    } catch (error) {
+      console.error('Erro ao criar entrada:', error);
     }
-
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
-
-    fetch(`${baseURL}entradas`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log('Entrada criada com sucesso');
-          handleClose();
-          reset();
-        } else {
-          console.log('Erro na resposta:', response.status, response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error('Erro ao fazer requisição:', error);
-      });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
